@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * </p>
  *
  * @author msp
- * @since 2023-05-11
+ * @since 2023-05-15
  */
 @Schema(name = "User", description = "$!{table.comment}")
 class User : Serializable {
@@ -53,6 +53,9 @@ class User : Serializable {
     @Schema(description = "群组id")
     var groupId: Int? = null
 
+    @Schema(description = "是否删除：1删除")
+    var isDelete: Boolean? = null
+
     override fun toString(): String {
         return "User{" +
         "id=" + id +
@@ -68,6 +71,7 @@ class User : Serializable {
         ", enableEmailNotify=" + enableEmailNotify +
         ", enableUpload=" + enableUpload +
         ", groupId=" + groupId +
+        ", isDelete=" + isDelete +
         "}"
     }
 }

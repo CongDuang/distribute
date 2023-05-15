@@ -48,6 +48,7 @@ fun main() {
         }
         .strategyConfig { c ->
             c.addInclude("user")
+                .enableCapitalMode()
                 .addTablePrefix("t_", "c_")
         }
         .templateEngine(FreemarkerTemplateEngine())
