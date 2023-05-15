@@ -2,8 +2,12 @@ package com.congduantools.distribute.controller
 
 import com.congduantools.distribute.common.ResponseInfo
 import com.congduantools.distribute.common.validation.GroupSequence
+import com.congduantools.distribute.po.dto.BaseSubmitResult
 import com.congduantools.distribute.po.dto.RegisterDTO
+import com.congduantools.distribute.service.UserService
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.annotation.Resource
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestBody
@@ -25,6 +29,9 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "用户管理")
 class UserController : BaseController() {
 
+    @Resource
+    lateinit var userService: UserService
+
     @RequestMapping("/test", method = [RequestMethod.POST])
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     fun test(@RequestParam str: String): ResponseInfo<Boolean> {
@@ -36,7 +43,7 @@ class UserController : BaseController() {
 
     @RequestMapping("/register", method = [RequestMethod.POST])
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    fun register(@RequestBody @Validated(GroupSequence::class) registerDTO: RegisterDTO): ResponseInfo<Boolean> {
-        return returnMessage("注册成功", true)
+    fun register(@RequestBody @Validated(GroupSequence::class) registerDTO: RegisterDTO): ResponseInfo<BaseSubmitResult<Nothing>> {
+        return returnData(userService.register(registerDTO))
     }
 }

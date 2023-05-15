@@ -2,7 +2,10 @@ server:
   port: 8070
   servlet:
     context-path: /api/v1
-
+    encoding:
+      charset: UTF-8
+  tomcat:
+    uri-encoding: UTF-8
 springdoc:
   swagger-ui:
     path: /docs
@@ -13,3 +16,13 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+  web:
+    resources:
+      static-locations: classpath:/resources/static
+
+mybatis-plus:
+  mapper-locations: classpath*:/**/mapper/*Mapper.xml

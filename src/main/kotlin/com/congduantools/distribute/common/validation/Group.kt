@@ -7,7 +7,7 @@ import jakarta.validation.GroupSequence
  *
  * time: 2023/5/15
  *
- * desc:
+ * desc: 验证排序
  */
 
 @GroupSequence(GroupA::class, GroupB::class)
