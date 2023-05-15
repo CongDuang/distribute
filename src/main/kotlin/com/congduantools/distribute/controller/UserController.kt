@@ -1,10 +1,11 @@
 package com.congduantools.distribute.controller
 
 import com.congduantools.distribute.common.ResponseInfo
+import com.congduantools.distribute.common.validation.GroupSequence
 import com.congduantools.distribute.po.dto.RegisterDTO
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -35,7 +36,7 @@ class UserController : BaseController() {
 
     @RequestMapping("/register", method = [RequestMethod.POST])
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    fun register(@RequestBody @Valid registerDTO: RegisterDTO): ResponseInfo<Boolean> {
+    fun register(@RequestBody @Validated(GroupSequence::class) registerDTO: RegisterDTO): ResponseInfo<Boolean> {
         return returnMessage("注册成功", true)
     }
 }
