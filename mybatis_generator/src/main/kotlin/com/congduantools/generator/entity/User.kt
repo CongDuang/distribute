@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * </p>
  *
  * @author msp
- * @since 2023-05-15
+ * @since 2023-05-16
  */
 @Schema(name = "User", description = "$!{table.comment}")
 class User : Serializable {
@@ -34,6 +34,8 @@ class User : Serializable {
 
     @Schema(description = "手机号")
     var mobile: Int? = null
+
+    var token: String? = null
 
     @Schema(description = "创建时间")
     var createDateTime: LocalDateTime? = null
@@ -64,6 +66,7 @@ class User : Serializable {
         ", name=" + name +
         ", email=" + email +
         ", mobile=" + mobile +
+        ", token=" + token +
         ", createDateTime=" + createDateTime +
         ", updateDateTime=" + updateDateTime +
         ", apiKey=" + apiKey +

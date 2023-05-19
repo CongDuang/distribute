@@ -9,6 +9,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author msp
- * @since 2023-05-15
+ * @since 2023-05-16
  */
 interface UserMapper : BaseMapper<User>

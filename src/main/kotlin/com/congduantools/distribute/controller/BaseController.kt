@@ -19,4 +19,8 @@ abstract class BaseController {
     protected fun <T> returnMessage(msg: String, data: T): ResponseInfo<T> {
         return ResponseUtils.getSuccessfulResult(msg, data)
     }
+
+    protected fun <T> returnMessage(msg: String): ResponseInfo<T> {
+        return ResponseUtils.getSuccessfulResult(msg, null)
+    }
 }

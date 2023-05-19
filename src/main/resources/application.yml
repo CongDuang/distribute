@@ -1,7 +1,6 @@
 server:
   port: 8070
   servlet:
-    context-path: /api/v1
     encoding:
       charset: UTF-8
   tomcat:
@@ -23,6 +22,19 @@ spring:
   web:
     resources:
       static-locations: classpath:/resources/static
+
+shiro:
+  config:
+    hashAlgorithmName: md5
+    hashIterations: 1
+    salt: shiro
+    shiroSessionPrefix: session
+    shiroSessionTimeout: 1800000
+    shiroSessionValidationInterval: 60000
+    shiroCachePrefix: shiro-cache
+    shiroCacheExpireTime: 120000
+    isLogInSeparately: true
+
 
 mybatis-plus:
   mapper-locations: classpath*:/**/mapper/*Mapper.xml

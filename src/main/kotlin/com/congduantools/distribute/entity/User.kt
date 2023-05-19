@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import java.io.Serializable
 import java.time.LocalDateTime
-import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author msp
- * @since 2023-05-15
+ * @since 2023-05-16
  */
 @Schema(name = "User", description = "$!{table.comment}")
 class User : Serializable {
@@ -34,6 +34,8 @@ class User : Serializable {
 
     @Schema(description = "手机号")
     var mobile: Int? = null
+
+    var token: String? = null
 
     @Schema(description = "创建时间")
     var createDateTime: LocalDateTime? = null
@@ -58,20 +60,21 @@ class User : Serializable {
 
     override fun toString(): String {
         return "User{" +
-                "id=" + id +
-                ", username=" + username +
-                ", password=" + password +
-                ", name=" + name +
-                ", email=" + email +
-                ", mobile=" + mobile +
-                ", createDateTime=" + createDateTime +
-                ", updateDateTime=" + updateDateTime +
-                ", apiKey=" + apiKey +
-                ", userKey=" + userKey +
-                ", enableEmailNotify=" + enableEmailNotify +
-                ", enableUpload=" + enableUpload +
-                ", groupId=" + groupId +
-                ", isDelete=" + isDelete +
-                "}"
+        "id=" + id +
+        ", username=" + username +
+        ", password=" + password +
+        ", name=" + name +
+        ", email=" + email +
+        ", mobile=" + mobile +
+        ", token=" + token +
+        ", createDateTime=" + createDateTime +
+        ", updateDateTime=" + updateDateTime +
+        ", apiKey=" + apiKey +
+        ", userKey=" + userKey +
+        ", enableEmailNotify=" + enableEmailNotify +
+        ", enableUpload=" + enableUpload +
+        ", groupId=" + groupId +
+        ", isDelete=" + isDelete +
+        "}"
     }
 }
