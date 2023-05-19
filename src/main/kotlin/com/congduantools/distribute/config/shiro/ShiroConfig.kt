@@ -2,13 +2,16 @@ package com.congduantools.distribute.config.shiro
 
 import com.congduantools.distribute.common.shiro.realm.UserRealm
 import org.apache.shiro.SecurityUtils
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher
 import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.config.BeanDefinition
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Role
 import javax.servlet.Filter
 
@@ -25,6 +28,11 @@ import javax.servlet.Filter
 @Configuration
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 class ShiroConfig {
+
+    @Autowired
+    @Lazy
+    lateinit var shiroBO: ShiroBO
+
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     fun shiroFilterFactoryBean(securityManager: DefaultWebSecurityManager?): ShiroFilterFactoryBean {
@@ -45,12 +53,6 @@ class ShiroConfig {
         return manager
     }
 
-    @Bean
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    fun userRealm(): UserRealm {
-        return UserRealm()
-    }
-
     /**
      * 开启shiro aop注解支持 使用代理方式所以需要开启代码支持
      * 一定要写入上面advisorAutoProxyCreator（）自动代理。不然AOP注解不会生效
@@ -69,5 +71,31 @@ class ShiroConfig {
         val authorizationAttributeSourceAdvisor = AuthorizationAttributeSourceAdvisor()
         authorizationAttributeSourceAdvisor.securityManager = securityManager
         return authorizationAttributeSourceAdvisor
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    fun userRealm(credentialsMatcher: HashedCredentialsMatcher): UserRealm {
+        val userRealm = UserRealm(shiroBO)
+        userRealm.credentialsMatcher = credentialsMatcher
+        return userRealm
+    }
+
+    /**
+     * 创建密码验证器
+     *
+     * @param
+     * @Description: 创建密码验证器
+     * @Param:
+     * @return: org.apache.shiro.authc.credential.HashedCredentialsMatcher
+     * @Author: 苏泽华
+     * @Date: 2019/1/10
+     */
+    @Bean
+    fun credentialsMatcher(): HashedCredentialsMatcher? {
+        val hashedCredentialsMatcher = HashedCredentialsMatcher()
+        hashedCredentialsMatcher.hashAlgorithmName = shiroBO.hashAlgorithmName
+        hashedCredentialsMatcher.hashIterations = shiroBO.hashIterations
+        return hashedCredentialsMatcher
     }
 }

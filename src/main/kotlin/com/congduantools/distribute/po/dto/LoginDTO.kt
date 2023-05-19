@@ -15,8 +15,8 @@ import jakarta.validation.constraints.NotBlank
 data class LoginDTO(
     @field:Schema(description = "用户名")
     @field:NotBlank(message = "用户名不能为空", groups = [GroupA::class])
-    val username: String?,
+    var username: String,
     @field:Schema(description = "密码")
     @field:NotBlank(message = "密码不能为空", groups = [GroupA::class])
-    val password: String?
+    val password: String
 )

@@ -5,6 +5,7 @@ import com.congduantools.distribute.common.validation.GroupSequence
 import com.congduantools.distribute.po.dto.BaseSubmitResult
 import com.congduantools.distribute.po.dto.LoginDTO
 import com.congduantools.distribute.po.dto.RegisterDTO
+import com.congduantools.distribute.po.vo.LoginVO
 import com.congduantools.distribute.service.UserService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.annotation.Resource
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import kotlin.math.log
 
 /**
  * author： 马世鹏
@@ -51,14 +53,19 @@ class UserController : BaseController() {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody @Validated(GroupSequence::class) loginDTO: LoginDTO): ResponseInfo<BaseSubmitResult<Nothing>> {
+    fun login(@RequestBody @Validated(GroupSequence::class) loginDTO: LoginDTO): ResponseInfo<LoginVO?> {
         val subject = SecurityUtils.getSubject()
         val token = UsernamePasswordToken(loginDTO.username, loginDTO.password)
         try {
             subject.login(token)
-            return returnMessage("登录成功")
         } catch (e: AuthenticationException) {
             e.printStackTrace()
+            return returnMessage("登录失败")
+        }
+
+        val user = userService.getUserByUsername(loginDTO.username)
+        if (user != null) {
+            return returnData(LoginVO(user))
         }
         return returnMessage("登录失败")
     }
