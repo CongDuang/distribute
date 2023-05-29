@@ -1,6 +1,7 @@
 package com.congduantools.distribute.config.shiro
 
 import com.congduantools.distribute.common.shiro.realm.UserRealm
+import com.congduantools.distribute.config.shiro.cache.RedisCacheManager
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher
 import org.apache.shiro.mgt.SecurityManager
@@ -35,7 +36,7 @@ class ShiroConfig {
 
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    fun shiroFilterFactoryBean(securityManager: DefaultWebSecurityManager?): ShiroFilterFactoryBean {
+    fun shiroFilterFactoryBean(securityManager: DefaultWebSecurityManager): ShiroFilterFactoryBean {
         val factoryBean = ShiroFilterFactoryBean()
         factoryBean.securityManager = securityManager
         val filterMap: MutableMap<String, Filter> = HashMap(20)
@@ -46,11 +47,31 @@ class ShiroConfig {
 
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    fun getSecurityManage(userRealm: UserRealm?): DefaultWebSecurityManager {
+    fun getSecurityManage(
+        userRealm: UserRealm,
+        sessionManager: CustomSessionManager,
+        redisCacheManager: RedisCacheManager
+    ): DefaultWebSecurityManager {
         val manager = DefaultWebSecurityManager()
         manager.setRealm(userRealm)
+        manager.sessionManager = sessionManager
+        manager.cacheManager = redisCacheManager
         SecurityUtils.setSecurityManager(manager)
         return manager
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    fun sessionManager(redisSessionDao: RedisSessionDao): CustomSessionManager {
+        val sessionManager = CustomSessionManager()
+        sessionManager.apply {
+            sessionDAO = redisSessionDao
+            isDeleteInvalidSessions = true
+            globalSessionTimeout = shiroBO.shiroSessionTimeout.toLong()
+            sessionValidationInterval = shiroBO.shiroSessionValidationInterval.toLong()
+            isSessionValidationSchedulerEnabled = true
+        }
+        return sessionManager
     }
 
     /**
@@ -73,10 +94,13 @@ class ShiroConfig {
         return authorizationAttributeSourceAdvisor
     }
 
-    @Bean
+    @Bean("userRealm")
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     fun userRealm(credentialsMatcher: HashedCredentialsMatcher): UserRealm {
-        val userRealm = UserRealm(shiroBO)
+        val userRealm = UserRealm()
+        userRealm.isCachingEnabled = true
+        userRealm.shiroBO = shiroBO
+        userRealm.cacheManager = redisCacheManager()
         userRealm.credentialsMatcher = credentialsMatcher
         return userRealm
     }
@@ -92,10 +116,23 @@ class ShiroConfig {
      * @Date: 2019/1/10
      */
     @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     fun credentialsMatcher(): HashedCredentialsMatcher? {
         val hashedCredentialsMatcher = HashedCredentialsMatcher()
         hashedCredentialsMatcher.hashAlgorithmName = shiroBO.hashAlgorithmName
         hashedCredentialsMatcher.hashIterations = shiroBO.hashIterations
         return hashedCredentialsMatcher
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    fun redisSessionDao(): RedisSessionDao {
+        return RedisSessionDao()
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    fun redisCacheManager(): RedisCacheManager {
+        return RedisCacheManager()
     }
 }

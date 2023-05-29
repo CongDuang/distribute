@@ -19,6 +19,21 @@ spring:
     multipart:
       max-file-size: 200MB
       max-request-size: 200MB
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6380
+      ssl: false
+      password:
+      jedis:
+        pool:
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1
+          max-active: -1
+      timeout: 10000
+
   web:
     resources:
       static-locations: classpath:/resources/static

@@ -1,6 +1,6 @@
 package com.congduantools.distribute.po.vo
 
-import com.congduantools.distribute.entity.User
+import com.congduantools.distribute.po.dto.UserDTO
 import io.swagger.v3.oas.annotations.media.Schema
 
 /**
@@ -13,5 +13,5 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "登录返回")
 data class LoginVO(
     @field:Schema(description = "用户信息")
-    val userInfo: User,
+    val userInfo: UserDTO,
 )

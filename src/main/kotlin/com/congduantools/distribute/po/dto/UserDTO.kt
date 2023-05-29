@@ -1,4 +1,4 @@
-package com.congduantools.distribute.entity
+package com.congduantools.distribute.po.dto
 
 import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @since 2023-05-16
  */
 @Schema(name = "User", description = "$!{table.comment}")
-class User : Serializable {
+class UserDTO : Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     var id: Int? = null
@@ -41,6 +41,8 @@ class User : Serializable {
     var updateDateTime: LocalDateTime? = null
 
     var lastLoginTime: LocalDateTime? = null
+
+    var token: String? = null
 
     var apiKey: String? = null
 

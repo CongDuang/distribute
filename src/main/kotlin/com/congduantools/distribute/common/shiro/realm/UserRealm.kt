@@ -5,7 +5,6 @@ import com.congduantools.distribute.service.UserService
 import org.apache.shiro.authc.AuthenticationInfo
 import org.apache.shiro.authc.AuthenticationToken
 import org.apache.shiro.authc.SimpleAuthenticationInfo
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher
 import org.apache.shiro.authz.AuthorizationInfo
 import org.apache.shiro.realm.AuthorizingRealm
 import org.apache.shiro.subject.PrincipalCollection
@@ -20,11 +19,13 @@ import org.springframework.context.annotation.Lazy
  *
  * desc:
  */
-class UserRealm constructor(private val shiroBO: ShiroBO) : AuthorizingRealm() {
+class UserRealm : AuthorizingRealm() {
 
     @Lazy
     @Autowired
     lateinit var userService: UserService
+
+    var shiroBO: ShiroBO? = null
 
     /**
      * 认证
@@ -34,8 +35,9 @@ class UserRealm constructor(private val shiroBO: ShiroBO) : AuthorizingRealm() {
         if (username != null) {
             val user = userService.getUserByUsername(username)
             if (user != null) {
-                println("${user.password},${username}")
-                return SimpleAuthenticationInfo(username, user.password, ByteSource.Util.bytes(shiroBO.salt), name)
+                shiroBO?.apply {
+                    return SimpleAuthenticationInfo(username, user.password, ByteSource.Util.bytes(salt), name)
+                }
             }
         }
         return null
